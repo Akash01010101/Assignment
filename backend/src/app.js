@@ -16,6 +16,12 @@ app.use('/api/events', require('./routes/eventRoutes'));
 app.use('/api/reserve', require('./routes/reservationRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 
+// Mount Admin Routes
+app.use('/api/admin/events', require('./routes/admin/adminEventRoutes'));
+app.use('/api/admin/seats', require('./routes/admin/adminSeatRoutes'));
+app.use('/api/admin/bookings', require('./routes/admin/adminBookingRoutes'));
+app.use('/api/admin/stats', require('./routes/admin/adminStatsRoutes'));
+
 // 404 handler
 app.use((req, res, next) => {
   res.status(404).json({ error: 'Not Found' });
