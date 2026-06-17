@@ -142,7 +142,8 @@ const AdminEventSeatsPage = () => {
                 })}
               </div>
             </div>
-          ))}
+          );
+        })}
         </div>
 
         {/* Legend */}

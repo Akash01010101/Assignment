@@ -240,32 +240,53 @@ const HowItWorks = () => (
         </motion.h2>
       </motion.div>
 
-      <motion.div
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        variants={stagger}
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: 'var(--space-6)',
-        }}
-      >
-        {steps.map((s, i) => (
-          <motion.div key={i} variants={fadeUp} custom={i} style={{ textAlign: 'center', padding: 'var(--space-6)' }}>
-            <div style={{
-              fontSize: 'var(--text-5xl)', fontWeight: 800, lineHeight: 1,
-              background: 'var(--gradient-accent)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-              marginBottom: 'var(--space-4)',
-            }}>
-              {s.step}
-            </div>
-            <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 600, marginBottom: 'var(--space-2)' }}>{s.title}</h3>
-            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', margin: 0 }}>{s.desc}</p>
-          </motion.div>
-        ))}
-      </motion.div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-12)', alignItems: 'center' }} className="how-it-works-grid">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={stagger}
+          style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}
+        >
+          {steps.map((s, i) => (
+            <motion.div key={i} variants={fadeUp} custom={i} style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'flex-start' }}>
+              <div style={{
+                fontSize: 'var(--text-4xl)', fontWeight: 800, lineHeight: 1,
+                background: 'var(--gradient-accent)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
+              }}>
+                {s.step}
+              </div>
+              <div>
+                <h3 style={{ fontSize: 'var(--text-lg)', fontWeight: 600, marginBottom: 'var(--space-1)' }}>{s.title}</h3>
+                <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)', margin: 0 }}>{s.desc}</p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          style={{ position: 'relative', height: 400, borderRadius: 'var(--radius-2xl)', overflow: 'hidden', boxShadow: 'var(--shadow-xl)' }}
+          className="how-it-works-image"
+        >
+          <img 
+            src="https://images.unsplash.com/photo-1459749411175-04bf5292ceea?q=80&w=1400&auto=format&fit=crop" 
+            alt="Live Concert" 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(9,9,11,0.5) 0%, transparent 100%)' }} />
+        </motion.div>
+      </div>
     </div>
+    <style>{`
+      @media (max-width: 768px) {
+        .how-it-works-grid { grid-template-columns: 1fr !important; }
+        .how-it-works-image { height: 250px !important; margin-top: var(--space-8); }
+      }
+    `}</style>
   </section>
 );
 

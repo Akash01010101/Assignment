@@ -35,22 +35,33 @@ const LoginForm = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-        style={{ width: '100%', maxWidth: 420 }}
+        className="card"
+        style={{ width: '100%', maxWidth: 900, padding: 0, overflow: 'hidden', display: 'flex' }}
       >
-        {/* Accent bar */}
-        <div style={{
-          height: 3,
-          background: 'var(--gradient-accent)',
-          borderRadius: 'var(--radius-full) var(--radius-full) 0 0',
-        }} />
+        {/* Left Side: Image */}
+        <div style={{ flex: 1, position: 'relative', display: 'none' }} className="auth-image">
+          <img 
+         src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1400&auto=format&fit=crop"
+            alt="Event Experience" 
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(9,9,11,0.9) 0%, transparent 50%)' }} />
+          <div style={{ position: 'absolute', bottom: 'var(--space-8)', left: 'var(--space-8)', right: 'var(--space-8)' }}>
+            <h3 style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, color: '#fff', marginBottom: 'var(--space-2)' }}>Welcome Back</h3>
+            <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)', lineHeight: 'var(--leading-relaxed)' }}>
+              Resume your premium event booking experience.
+            </p>
+          </div>
+        </div>
 
-        <div className="card" style={{ borderTop: 'none', borderTopLeftRadius: 0, borderTopRightRadius: 0 }}>
+        {/* Right Side: Form */}
+        <div style={{ flex: 1, padding: 'var(--space-8)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
           <div style={{ marginBottom: 'var(--space-6)' }}>
             <h2 style={{ fontSize: 'var(--text-2xl)', fontWeight: 700, marginBottom: 'var(--space-2)' }}>
-              Welcome back
+              Sign in
             </h2>
             <p style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-muted)', margin: 0 }}>
-              Sign in to your account to continue
+              Enter your credentials to access your account
             </p>
           </div>
 
@@ -113,6 +124,12 @@ const LoginForm = () => {
           </p>
         </div>
       </motion.div>
+
+      <style>{`
+        @media (min-width: 768px) {
+          .auth-image { display: block !important; }
+        }
+      `}</style>
     </div>
   );
 };

@@ -113,7 +113,9 @@ const SeatMap = ({ seats, selectedSeats, onToggleSeat }) => {
             })}
           </div>
         </div>
-      ))}
+      );
+    })}
+      </div>
     </div>
   );
 };
