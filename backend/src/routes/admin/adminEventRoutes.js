@@ -6,9 +6,9 @@ const asyncHandler = require('../../middleware/asyncHandler');
 const adminEventController = require('../../controllers/admin/adminEventController');
 const adminSeatController = require('../../controllers/admin/adminSeatController');
 const authMiddleware = require('../../middleware/authMiddleware');
-const requireAdmin = require('../../middleware/requireAdmin');
+const requireOrganizerOrAdmin = require('../../middleware/requireOrganizerOrAdmin');
 
-router.use(authMiddleware, requireAdmin);
+router.use(authMiddleware, requireOrganizerOrAdmin);
 
 router.get('/', asyncHandler(adminEventController.getAdminEvents));
 

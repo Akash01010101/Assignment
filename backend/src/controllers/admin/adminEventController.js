@@ -3,7 +3,8 @@ const Event = require('../../models/Event');
 const Seat = require('../../models/Seat');
 
 const getAdminEvents = async (req, res) => {
-  const events = await Event.find().sort({ dateTime: -1 });
+  const query = req.user.role === 'organizer' ? { organizer: req.user.id } : {};
+  const events = await Event.find(query).sort({ dateTime: -1 });
 
   const eventsWithStats = await Promise.all(
     events.map(async (event) => {
@@ -36,7 +37,7 @@ const createEvent = async (req, res) => {
   const { name, venue, dateTime, totalSeats, seatsPerRow = 10 } = req.body;
 
   const event = await adminEventService.createEventWithSeats(
-    { name, venue, dateTime, totalSeats },
+    { name, venue, dateTime, totalSeats, organizer: req.user.id },
     seatsPerRow
   );
 

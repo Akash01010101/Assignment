@@ -93,12 +93,12 @@ const Header = () => {
                 <Link to="/my-bookings" style={navLinkStyle('/my-bookings')}>
                   <BookOpen size={14} /> My Bookings
                 </Link>
-                {user.role === 'admin' && (
+                {(user.role === 'admin' || user.role === 'organizer') && (
                   <Link to="/admin" style={{
                     ...navLinkStyle('/admin'),
                     color: isActive('/admin') || location.pathname.startsWith('/admin') ? 'var(--color-accent)' : 'var(--color-text-secondary)',
                   }}>
-                    <Shield size={14} /> Admin
+                    <Shield size={14} /> Dashboard
                   </Link>
                 )}
                 <div style={{ width: 1, height: 24, background: 'var(--color-border)', margin: '0 var(--space-2)' }} />
@@ -224,8 +224,8 @@ const Header = () => {
                 </div>
                 <Link to="/events" style={navLinkStyle('/events')}><CalendarDays size={16} /> Events</Link>
                 <Link to="/my-bookings" style={navLinkStyle('/my-bookings')}><BookOpen size={16} /> My Bookings</Link>
-                {user.role === 'admin' && (
-                  <Link to="/admin" style={navLinkStyle('/admin')}><Shield size={16} /> Admin Panel</Link>
+                {(user.role === 'admin' || user.role === 'organizer') && (
+                  <Link to="/admin" style={navLinkStyle('/admin')}><Shield size={16} /> Dashboard</Link>
                 )}
                 <div style={{ marginTop: 'auto' }}>
                   <Button variant="ghost" fullWidth onClick={handleLogout} icon={<LogOut size={14} />}>Logout</Button>

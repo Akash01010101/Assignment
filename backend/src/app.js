@@ -21,6 +21,7 @@ app.use('/api/admin/events', require('./routes/admin/adminEventRoutes'));
 app.use('/api/admin/seats', require('./routes/admin/adminSeatRoutes'));
 app.use('/api/admin/bookings', require('./routes/admin/adminBookingRoutes'));
 app.use('/api/admin/stats', require('./routes/admin/adminStatsRoutes'));
+app.use('/api/admin', require('./routes/admin/adminBusinessRoutes'));
 
 // 404 handler
 app.use((req, res, next) => {

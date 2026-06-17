@@ -9,3 +9,8 @@ export const register = async (name, email, password) => {
   const response = await axiosClient.post('/auth/register', { name, email, password });
   return response.data;
 };
+
+export const registerBusiness = async (data) => {
+  const response = await axiosClient.post('/auth/register-business', data);
+  return response.data;
+};

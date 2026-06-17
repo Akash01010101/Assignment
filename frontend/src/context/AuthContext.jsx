@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from 'react';
-import { login as apiLogin, register as apiRegister } from '../api/authApi';
+import { login as apiLogin, register as apiRegister, registerBusiness as apiRegisterBusiness } from '../api/authApi';
 
 export const AuthContext = createContext();
 
@@ -28,6 +28,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('eventBooking_auth', JSON.stringify(data));
   };
 
+  const registerBusiness = async (formData) => {
+    const data = await apiRegisterBusiness(formData);
+    setUser(data.user);
+    localStorage.setItem('eventBooking_auth', JSON.stringify(data));
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('eventBooking_auth');
@@ -36,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   if (loading) return null;
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, register, registerBusiness, logout }}>
       {children}
     </AuthContext.Provider>
   );

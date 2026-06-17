@@ -73,4 +73,3 @@ The `admin` role cannot be acquired through the standard UI registration flow. Y
 
 ---
 
-*Enjoy using EventHub!*

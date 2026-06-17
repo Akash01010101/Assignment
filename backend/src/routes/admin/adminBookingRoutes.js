@@ -3,9 +3,9 @@ const router = express.Router();
 const asyncHandler = require('../../middleware/asyncHandler');
 const adminBookingController = require('../../controllers/admin/adminBookingController');
 const authMiddleware = require('../../middleware/authMiddleware');
-const requireAdmin = require('../../middleware/requireAdmin');
+const requireOrganizerOrAdmin = require('../../middleware/requireOrganizerOrAdmin');
 
-router.use(authMiddleware, requireAdmin);
+router.use(authMiddleware, requireOrganizerOrAdmin);
 
 router.get('/', asyncHandler(adminBookingController.getBookings));
 

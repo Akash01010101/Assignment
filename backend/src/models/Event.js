@@ -25,6 +25,11 @@ const eventSchema = new mongoose.Schema(
         message   : '{VALUE} is not an integer value'
       }
     },
+    organizer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: false,
+    },
   },
   { timestamps: true }
 );

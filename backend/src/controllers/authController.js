@@ -68,7 +68,50 @@ const login = async (req, res) => {
   });
 };
 
+const registerBusiness = async (req, res) => {
+  const { email, password, firstName, lastName, companyName, businessType, location, phoneNumber, companyWebsite } = req.body;
+
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    throw new ApiError(409, 'User with that email already exists');
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  const passwordHash = await bcrypt.hash(password, salt);
+
+  const name = `${firstName} ${lastName}`.trim();
+
+  const user = await User.create({
+    email,
+    passwordHash,
+    name,
+    role: 'user', // remains user until approved
+    businessProfile: {
+      companyName,
+      businessType,
+      location,
+      phoneNumber,
+      companyWebsite,
+      status: 'pending',
+    },
+  });
+
+  const token = generateToken(user._id, user.email, user.role);
+
+  res.status(201).json({
+    user: {
+      id: user._id,
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      businessStatus: user.businessProfile.status,
+    },
+    token,
+  });
+};
+
 module.exports = {
   register,
   login,
+  registerBusiness,
 };

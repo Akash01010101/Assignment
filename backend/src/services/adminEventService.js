@@ -5,13 +5,13 @@ const Reservation = require('../models/Reservation');
 const ApiError = require('../utils/ApiError');
 
 const createEventWithSeats = async (eventData, seatsPerRow = 10) => {
-  const { name, venue, dateTime, totalSeats } = eventData;
+  const { name, venue, dateTime, totalSeats, organizer } = eventData;
   const session = await mongoose.startSession();
   session.startTransaction();
 
   try {
     const [event] = await Event.create(
-      [{ name, venue, dateTime, totalSeats }],
+      [{ name, venue, dateTime, totalSeats, organizer }],
       { session }
     );
 

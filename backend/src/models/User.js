@@ -23,9 +23,21 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'admin'],
+      enum: ['user', 'admin', 'organizer'],
       default: 'user',
       required: true,
+    },
+    businessProfile: {
+      companyName: { type: String, trim: true },
+      businessType: { type: String, trim: true },
+      location: { type: String, trim: true },
+      phoneNumber: { type: String, trim: true },
+      companyWebsite: { type: String, trim: true },
+      status: {
+        type: String,
+        enum: ['none', 'pending', 'approved', 'rejected'],
+        default: 'none',
+      },
     },
   },
   { timestamps: true }

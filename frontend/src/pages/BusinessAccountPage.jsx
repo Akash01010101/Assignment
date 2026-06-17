@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Building2, Mail, Lock, User, Briefcase, MapPin, Globe, Phone, ArrowRight, ShieldCheck } from 'lucide-react';
 import Button from '../components/common/Button';
@@ -6,6 +7,7 @@ import ErrorBanner from '../components/common/ErrorBanner';
 import { Link } from 'react-router-dom';
 
 const BusinessAccountPage = () => {
+  const { registerBusiness } = useContext(AuthContext);
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -26,11 +28,14 @@ const BusinessAccountPage = () => {
     setLoading(true);
     setError(null);
     
-    // Simulate API call for business account creation
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      await registerBusiness(form);
       setSuccess(true);
-    }, 1500);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to submit application. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });

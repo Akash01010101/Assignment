@@ -3,16 +3,34 @@ const Reservation = require('../../models/Reservation');
 const Seat = require('../../models/Seat');
 
 const getStats = async (req, res) => {
-  const totalEvents = await Event.countDocuments();
-  const totalBookings = await Reservation.countDocuments({ status: 'confirmed' });
+  const isOrganizer = req.user.role === 'organizer';
+  const organizerQuery = isOrganizer ? { organizer: req.user.id } : {};
+
+  const totalEvents = await Event.countDocuments(organizerQuery);
+
+  // For totalBookings and seat stats, we need to filter by eventIds owned by organizer
+  let eventIds = null;
+  if (isOrganizer) {
+    const events = await Event.find({ organizer: req.user.id }).select('_id');
+    eventIds = events.map(e => e._id);
+  }
+
+  const bookingQuery = { status: 'confirmed' };
+  const seatQuery = {};
+  if (isOrganizer) {
+    bookingQuery.eventId = { $in: eventIds };
+    seatQuery.eventId = { $in: eventIds };
+  }
+
+  const totalBookings = await Reservation.countDocuments(bookingQuery);
 
   // Overall seat utilization
-  const totalSeats = await Seat.countDocuments();
-  const bookedSeats = await Seat.countDocuments({ status: 'booked' });
+  const totalSeats = await Seat.countDocuments(seatQuery);
+  const bookedSeats = await Seat.countDocuments({ ...seatQuery, status: 'booked' });
   const overallSeatUtilization = totalSeats > 0 ? (bookedSeats / totalSeats) * 100 : 0;
 
   // Top events by bookings
-  const topEvents = await Event.aggregate([
+  const aggregationPipeline = [
     {
       $lookup: {
         from: 'seats',
@@ -24,6 +42,7 @@ const getStats = async (req, res) => {
     {
       $project: {
         name: 1,
+        organizer: 1,
         bookedSeats: {
           $size: {
             $filter: {
@@ -37,7 +56,14 @@ const getStats = async (req, res) => {
     },
     { $sort: { bookedSeats: -1 } },
     { $limit: 5 },
-  ]);
+  ];
+
+  if (isOrganizer) {
+    // Add match stage to filter top events by organizer
+    aggregationPipeline.unshift({ $match: { organizer: require('mongoose').Types.ObjectId.createFromHexString(req.user.id) } });
+  }
+
+  const topEvents = await Event.aggregate(aggregationPipeline);
 
   res.json({
     totalEvents,

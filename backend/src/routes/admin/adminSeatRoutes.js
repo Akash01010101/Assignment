@@ -5,9 +5,9 @@ const validate = require('../../middleware/validate');
 const asyncHandler = require('../../middleware/asyncHandler');
 const adminSeatController = require('../../controllers/admin/adminSeatController');
 const authMiddleware = require('../../middleware/authMiddleware');
-const requireAdmin = require('../../middleware/requireAdmin');
+const requireOrganizerOrAdmin = require('../../middleware/requireOrganizerOrAdmin');
 
-router.use(authMiddleware, requireAdmin);
+router.use(authMiddleware, requireOrganizerOrAdmin);
 
 router.patch(
   '/:seatId/release',

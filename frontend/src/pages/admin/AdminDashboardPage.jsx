@@ -4,7 +4,9 @@ import { motion } from 'framer-motion';
 import { getAdminStats } from '../../api/admin/adminStatsApi';
 import Spinner from '../../components/common/Spinner';
 import ErrorBanner from '../../components/common/ErrorBanner';
-import { CalendarDays, Ticket, BarChart3, TrendingUp, ArrowRight } from 'lucide-react';
+import { AuthContext } from '../../context/AuthContext';
+import { useContext } from 'react';
+import { CalendarDays, Ticket, BarChart3, TrendingUp, ArrowRight, Building2 } from 'lucide-react';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 15 },
@@ -12,6 +14,7 @@ const fadeUp = {
 };
 
 const AdminDashboardPage = () => {
+  const { user } = useContext(AuthContext);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -39,11 +42,20 @@ const AdminDashboardPage = () => {
     { label: 'Seat Utilization', value: stats.overallSeatUtilization, icon: <TrendingUp size={20} />, gradient: 'var(--gradient-warm)' },
   ];
 
+  const quickLinks = [
+    { to: '/admin/events', label: 'Manage Events', icon: <CalendarDays size={16} /> },
+    { to: '/admin/bookings', label: 'View Bookings', icon: <Ticket size={16} /> },
+  ];
+
+  if (user && user.role === 'admin') {
+    quickLinks.push({ to: '/admin/businesses', label: 'Business Apps', icon: <Building2 size={16} /> });
+  }
+
   return (
     <div>
       <div style={{ marginBottom: 'var(--space-8)' }}>
         <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 700, letterSpacing: 'var(--tracking-tight)', marginBottom: 'var(--space-2)' }}>
-          Admin Dashboard
+          {user?.role === 'organizer' ? 'Organizer Dashboard' : 'Admin Dashboard'}
         </h1>
         <p style={{ color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)', margin: 0 }}>
           Overview of your event platform
@@ -52,10 +64,7 @@ const AdminDashboardPage = () => {
 
       {/* Quick Links */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 'var(--space-3)', marginBottom: 'var(--space-8)' }}>
-        {[
-          { to: '/admin/events', label: 'Manage Events', icon: <CalendarDays size={16} /> },
-          { to: '/admin/bookings', label: 'View Bookings', icon: <Ticket size={16} /> },
-        ].map((link, i) => (
+        {quickLinks.map((link, i) => (
           <motion.div key={link.to} variants={fadeUp} initial="hidden" animate="visible" custom={i}>
             <Link to={link.to} style={{ color: 'inherit', textDecoration: 'none' }}>
               <div className="card" style={{

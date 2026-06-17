@@ -7,7 +7,20 @@ const getBookings = async (req, res) => {
 
   let query = { status: 'confirmed' };
   
+  if (req.user.role === 'organizer') {
+    const Event = require('../../models/Event');
+    const organizerEvents = await Event.find({ organizer: req.user.id }).select('_id');
+    query.eventId = { $in: organizerEvents.map(e => e._id) };
+  }
+
   if (req.query.eventId) {
+    if (req.user.role === 'organizer') {
+      // Ensure the requested eventId is one they own
+      const ownsEvent = await require('../../models/Event').exists({ _id: req.query.eventId, organizer: req.user.id });
+      if (!ownsEvent) {
+        return res.status(403).json({ error: 'Not authorized to view bookings for this event' });
+      }
+    }
     query.eventId = req.query.eventId;
   }
   if (req.query.from || req.query.to) {
