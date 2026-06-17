@@ -1,12 +1,6 @@
 import React from 'react';
 import RegisterForm from '../components/auth/RegisterForm';
 
-const RegisterPage = () => {
-  return (
-    <div style={{ paddingTop: '4rem' }}>
-      <RegisterForm />
-    </div>
-  );
-};
+const RegisterPage = () => <RegisterForm />;
 
 export default RegisterPage;

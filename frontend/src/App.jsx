@@ -1,8 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import { AuthProvider } from './context/AuthContext';
 import Header from './components/layout/Header';
 import PageContainer from './components/layout/PageContainer';
+import LandingPage from './pages/LandingPage';
 import EventsPage from './pages/EventsPage';
 import EventDetailPage from './pages/EventDetailPage';
 import LoginPage from './pages/LoginPage';
@@ -25,42 +27,25 @@ function App() {
     <AuthProvider>
       <Router>
         <Header />
-        <PageContainer>
+        <AnimatePresence mode="wait">
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route 
-              path="/" 
-              element={
-                <ProtectedRoute>
-                  <EventsPage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/events/:id" 
-              element={
-                <ProtectedRoute>
-                  <EventDetailPage />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/my-bookings" 
-              element={
-                <ProtectedRoute>
-                  <MyBookingsPage />
-                </ProtectedRoute>
-              } 
-            />
-            
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminRoute><AdminDashboardPage /></AdminRoute>} />
-            <Route path="/admin/events" element={<AdminRoute><AdminEventsPage /></AdminRoute>} />
-            <Route path="/admin/events/:id/seats" element={<AdminRoute><AdminEventSeatsPage /></AdminRoute>} />
-            <Route path="/admin/bookings" element={<AdminRoute><AdminBookingsPage /></AdminRoute>} />
+            {/* Public */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<PageContainer><LoginPage /></PageContainer>} />
+            <Route path="/register" element={<PageContainer><RegisterPage /></PageContainer>} />
+
+            {/* Protected */}
+            <Route path="/events" element={<ProtectedRoute><PageContainer><EventsPage /></PageContainer></ProtectedRoute>} />
+            <Route path="/events/:id" element={<ProtectedRoute><PageContainer><EventDetailPage /></PageContainer></ProtectedRoute>} />
+            <Route path="/my-bookings" element={<ProtectedRoute><PageContainer><MyBookingsPage /></PageContainer></ProtectedRoute>} />
+
+            {/* Admin */}
+            <Route path="/admin" element={<AdminRoute><PageContainer><AdminDashboardPage /></PageContainer></AdminRoute>} />
+            <Route path="/admin/events" element={<AdminRoute><PageContainer><AdminEventsPage /></PageContainer></AdminRoute>} />
+            <Route path="/admin/events/:id/seats" element={<AdminRoute><PageContainer><AdminEventSeatsPage /></PageContainer></AdminRoute>} />
+            <Route path="/admin/bookings" element={<AdminRoute><PageContainer><AdminBookingsPage /></PageContainer></AdminRoute>} />
           </Routes>
-        </PageContainer>
+        </AnimatePresence>
       </Router>
     </AuthProvider>
   );
