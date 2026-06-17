@@ -4,12 +4,20 @@ const { body, param } = require('express-validator');
 const validate = require('../../middleware/validate');
 const asyncHandler = require('../../middleware/asyncHandler');
 const adminEventController = require('../../controllers/admin/adminEventController');
+const adminSeatController = require('../../controllers/admin/adminSeatController');
 const authMiddleware = require('../../middleware/authMiddleware');
 const requireAdmin = require('../../middleware/requireAdmin');
 
 router.use(authMiddleware, requireAdmin);
 
 router.get('/', asyncHandler(adminEventController.getAdminEvents));
+
+router.get(
+  '/:id/seats',
+  [param('id').isMongoId().withMessage('Invalid event ID')],
+  validate,
+  asyncHandler(adminSeatController.getEventSeats)
+);
 
 router.post(
   '/',

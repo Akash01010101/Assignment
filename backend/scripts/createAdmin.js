@@ -1,5 +1,6 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const User = require('../src/models/User');
 
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -23,12 +24,15 @@ const createAdmin = async () => {
       await existingAdmin.save();
       console.log(`Admin role confirmed for existing user: ${EMAIL}`);
     } else {
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash(PASSWORD, salt);
+
       const user = new User({
         email: EMAIL,
         name: 'Admin User',
         role: 'admin',
+        passwordHash,
       });
-      user.password = PASSWORD; // Trigger virtual setter
       await user.save();
       console.log(`Created new admin user: ${EMAIL}`);
     }

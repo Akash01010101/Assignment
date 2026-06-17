@@ -37,16 +37,13 @@ userSchema.virtual('password').set(function (password) {
 });
 
 // Pre-save hook to hash password
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('passwordHash') && !this._password) {
-    return next();
+userSchema.pre('save', async function () {
+  if (!this._password) {
+    return;
   }
   
-  if (this._password) {
-    const salt = await bcrypt.genSalt(10);
-    this.passwordHash = await bcrypt.hash(this._password, salt);
-  }
-  next();
+  const salt = await bcrypt.genSalt(10);
+  this.passwordHash = await bcrypt.hash(this._password, salt);
 });
 
 // Instance method to compare password

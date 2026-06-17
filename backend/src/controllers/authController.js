@@ -1,5 +1,6 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
 const env = require('../config/env');
 const ApiError = require('../utils/ApiError');
 
@@ -17,10 +18,13 @@ const register = async (req, res) => {
     throw new ApiError(409, 'User with that email already exists');
   }
 
+  const salt = await bcrypt.genSalt(10);
+  const passwordHash = await bcrypt.hash(password, salt);
+
   // Explicitly do not accept role from req.body
   const user = await User.create({
     email,
-    password, // Virtual sets it
+    passwordHash,
     name,
     role: 'user', 
   });
