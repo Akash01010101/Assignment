@@ -24,6 +24,8 @@ const SeatMap = ({ seats, selectedSeats, onToggleSeat }) => {
     rows[row].push(seat);
   });
 
+  const sortedRowLabels = Object.keys(rows).sort();
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)' }}>
       {/* Stage indicator */}
@@ -41,15 +43,23 @@ const SeatMap = ({ seats, selectedSeats, onToggleSeat }) => {
         STAGE
       </div>
 
-      {Object.entries(rows).map(([rowLabel, rowSeats]) => (
-        <div key={rowLabel} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-          <span style={{
-            width: 24, textAlign: 'center',
-            fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', fontWeight: 600,
-          }}>
-            {rowLabel}
-          </span>
-          <div style={{ display: 'flex', gap: 'var(--space-1)', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-2)' }}>
+        {sortedRowLabels.map((rowLabel) => {
+          const rowSeats = rows[rowLabel].sort((a, b) => {
+            const numA = parseInt(a.seatNumber.replace(/\D/g, ''), 10);
+            const numB = parseInt(b.seatNumber.replace(/\D/g, ''), 10);
+            return numA - numB;
+          });
+
+          return (
+            <div key={rowLabel} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', justifyContent: 'center' }}>
+              <span style={{
+                width: 24, textAlign: 'center',
+                fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', fontWeight: 600,
+              }}>
+                {rowLabel}
+              </span>
+              <div style={{ display: 'flex', gap: 'var(--space-1)', flexWrap: 'wrap', justifyContent: 'center' }}>
             {rowSeats.map((seat) => {
               const isSelected = selectedSeats.includes(seat.seatNumber);
               const isAvailable = seat.status === 'available';

@@ -7,28 +7,28 @@
 
 :root {
   /* ── Color Palette ─────────────────────────────────────────── */
-  --color-bg:             #09090b;
-  --color-bg-alt:         #0c0c0f;
-  --color-surface:        #131316;
-  --color-surface-hover:  #1a1a1f;
-  --color-surface-alt:    #1e1e24;
-  --color-border:         rgba(255, 255, 255, 0.06);
-  --color-border-hover:   rgba(255, 255, 255, 0.12);
-  --color-border-active:  rgba(139, 92, 246, 0.4);
+  --color-bg:             #000000;
+  --color-bg-alt:         #030303;
+  --color-surface:        #111111;
+  --color-surface-hover:  #161616;
+  --color-surface-alt:    #1a1a1a;
+  --color-border:         rgba(255, 255, 255, 0.08);
+  --color-border-hover:   rgba(255, 255, 255, 0.15);
+  --color-border-active:  rgba(200, 77, 255, 0.5);
 
   /* Text */
-  --color-text-primary:   #fafafa;
+  --color-text-primary:   #f5f6f5;
   --color-text-secondary: #a1a1aa;
-  --color-text-muted:     #52525b;
+  --color-text-muted:     #505253;
 
-  /* Accent — Violet Gradient System */
-  --color-accent:         #8b5cf6;
-  --color-accent-hover:   #7c3aed;
-  --color-accent-light:   rgba(139, 92, 246, 0.12);
-  --color-accent-glow:    rgba(139, 92, 246, 0.25);
-  --gradient-accent:      linear-gradient(135deg, #8b5cf6, #6366f1);
-  --gradient-accent-hover:linear-gradient(135deg, #7c3aed, #4f46e5);
-  --gradient-hero:        linear-gradient(135deg, #8b5cf6 0%, #6366f1 50%, #3b82f6 100%);
+  /* Accent — Purple Gradient System */
+  --color-accent:         #c84dff;
+  --color-accent-hover:   #9a54e8;
+  --color-accent-light:   rgba(200, 77, 255, 0.15);
+  --color-accent-glow:    rgba(200, 77, 255, 0.35);
+  --gradient-accent:      linear-gradient(135deg, #c84dff, #9a54e8);
+  --gradient-accent-hover:linear-gradient(135deg, #9a54e8, #6a2fb8);
+  --gradient-hero:        linear-gradient(135deg, #c84dff 0%, #9a54e8 50%, #6a2fb8 100%);
   --gradient-warm:        linear-gradient(135deg, #f97316, #ef4444);
   --gradient-emerald:     linear-gradient(135deg, #10b981, #059669);
 

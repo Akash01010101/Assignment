@@ -15,6 +15,7 @@ import AdminEventsPage from './pages/admin/AdminEventsPage';
 import AdminEventSeatsPage from './pages/admin/AdminEventSeatsPage';
 import AdminBookingsPage from './pages/admin/AdminBookingsPage';
 import AdminRoute from './components/auth/AdminRoute';
+import BusinessAccountPage from './pages/BusinessAccountPage';
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem('eventBooking_auth');
@@ -33,6 +34,7 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<PageContainer><LoginPage /></PageContainer>} />
             <Route path="/register" element={<PageContainer><RegisterPage /></PageContainer>} />
+            <Route path="/business-account" element={<PageContainer><BusinessAccountPage /></PageContainer>} />
 
             {/* Protected */}
             <Route path="/events" element={<ProtectedRoute><PageContainer><EventsPage /></PageContainer></ProtectedRoute>} />

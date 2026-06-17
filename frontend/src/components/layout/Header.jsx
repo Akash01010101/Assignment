@@ -144,6 +144,7 @@ const Header = () => {
               </>
             ) : (
               <>
+                <Link to="/business-account"><Button variant="ghost" size="sm" style={{ color: 'var(--color-accent)' }}>List your Event</Button></Link>
                 <Link to="/login"><Button variant="ghost" size="sm">Login</Button></Link>
                 <Link to="/register"><Button size="sm">Get Started</Button></Link>
               </>
@@ -232,6 +233,7 @@ const Header = () => {
               </>
             ) : (
               <>
+                <Link to="/business-account"><Button variant="ghost" fullWidth style={{ color: 'var(--color-accent)' }}>List your Event</Button></Link>
                 <Link to="/login"><Button variant="secondary" fullWidth>Login</Button></Link>
                 <Link to="/register"><Button fullWidth>Get Started</Button></Link>
               </>
