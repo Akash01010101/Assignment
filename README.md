@@ -105,6 +105,7 @@ This is a production-grade, full-stack seat reservation and booking system. It i
 | Endpoint | Method | Auth | Description |
 |---|---|---|---|
 | `/api/auth/register` | POST | None | Register new user (always creates `user` role) |
+| `/api/auth/register-business` | POST | None | Register a business account (creates user with pending status) |
 | `/api/auth/login` | POST | None | Authenticate user |
 | `/api/events` | GET | None | List upcoming events with available seats |
 | `/api/events/:id` | GET | None | Get event details and seat statuses |
@@ -118,6 +119,9 @@ This is a production-grade, full-stack seat reservation and booking system. It i
 | `/api/admin/events/:id/seats` | GET | Admin | View detailed list of seats for an event |
 | `/api/admin/seats/:seatId/release` | PATCH | Admin | Force a reserved seat back to available |
 | `/api/admin/bookings` | GET | Admin | View all confirmed bookings (paginated, filterable) |
+| `/api/admin/business-applications` | GET | Admin | List all pending, approved, or rejected business applications |
+| `/api/admin/business-applications/:id/approve` | PUT | Admin | Approve an application and upgrade user to organizer role |
+| `/api/admin/business-applications/:id/reject` | PUT | Admin | Reject an application |
 | `/api/admin/stats` | GET | Admin | View aggregate statistics |
 
 ## Design Decisions — Double-Booking Prevention
@@ -126,11 +130,12 @@ To ensure robust concurrency and prevent double-booking, this system relies on *
 - **Data Integrity**: At the schema level, a compound unique index on `{ eventId, seatNumber }` guarantees that two physical seats with the same number cannot be created for a single event.
 - **Expiration Protection**: The server actively verifies the `expiresAt` timestamp upon booking confirmation, preventing expired reservations from being confirmed regardless of the background TTL cleanup process.
 
-## Design Decisions — Admin Access Control
-Administrative endpoints use a two-layer enforcement mechanism:
-1. **Schema Integrity**: The `User` model defines a `role` field. The public registration endpoint deliberately discards any provided `role` value, ensuring a new user is always given the default `user` role.
-2. **Middleware**: A `requireAdmin` middleware inspects the `role` directly from the validated JWT token. This middleware ensures non-admins receive a 403 Forbidden on any `/api/admin/*` routes.
-While the frontend UI hides the Admin link for standard users, the true boundary is enforced by this backend middleware.
+## Design Decisions — Roles & Access Control
+The platform relies on three distinct user roles: `user`, `organizer`, and `admin`.
+
+1. **Schema Integrity**: The `User` model defines the `role` field. The standard public registration endpoint deliberately discards any provided `role` value, ensuring a new user is always given the default `user` role.
+2. **Business Accounts**: Users can submit an application to become an Event Organizer via the `/api/auth/register-business` endpoint. This creates an account with a `pending` business profile. Only an `admin` can review these applications and upgrade their role to `organizer`.
+3. **Middleware Security**: A `requireAdmin` middleware inspects the `role` directly from the validated JWT token. This middleware ensures non-admins receive a 403 Forbidden on any `/api/admin/*` routes. While the frontend UI hides the Admin link for standard users, the true boundary is enforced by this backend middleware.
 
 ## Assumptions Made
 - A `GET /api/bookings/me` endpoint was added to allow users to view their booking history.
