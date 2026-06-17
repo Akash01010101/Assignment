@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Ticket, Shield, Zap, Clock, Users, BarChart3,
   ChevronDown, Star, ArrowRight, CheckCircle2,
-  Github, Twitter, Mail,
+  ExternalLink, MessageCircle, Mail,
 } from 'lucide-react';
 import Button from '../components/common/Button';
 
@@ -416,7 +416,7 @@ const Footer = () => (
         </div>
 
         <div style={{ display: 'flex', gap: 'var(--space-4)' }}>
-          {[Github, Twitter, Mail].map((Icon, i) => (
+          {[ExternalLink, MessageCircle, Mail].map((Icon, i) => (
             <a
               key={i}
               href="#"
