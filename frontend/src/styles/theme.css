@@ -1,0 +1,41 @@
+:root {
+  --color-bg: #030303;
+  --color-bg-alt: #000000;
+  --color-text-primary: #F5F6F5;
+  --color-text-muted: #505253;
+  --color-accent: #C84DFF;
+  --color-accent-secondary: #9A54E8;
+  --color-accent-dark: #6A2FB8;
+  --color-surface: #111111;
+  --color-surface-alt: #1A1A1A;
+
+  /* Seat status colors */
+  --color-seat-available: var(--color-surface-alt);
+  --color-seat-available-border: var(--color-text-muted);
+  --color-seat-selected: var(--color-accent);
+  --color-seat-reserved: var(--color-accent-dark);
+  --color-seat-booked: var(--color-text-muted);
+  
+  --color-success: #4ADE80;
+  --color-error: #FF6B6B;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+* {
+  box-sizing: border-box;
+}
