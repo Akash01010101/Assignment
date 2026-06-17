@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -22,76 +22,126 @@ const stagger = {
 };
 
 /* ── Hero ──────────────────────────────────────────────────── */
-const Hero = () => (
-  <section style={{
-    position: 'relative',
-    overflow: 'hidden',
-    padding: 'var(--space-24) 0 var(--space-20)',
-    textAlign: 'center',
-  }}>
-    {/* Background orbs */}
-    <div style={{
-      position: 'absolute', top: '-30%', left: '50%', transform: 'translateX(-50%)',
-      width: 800, height: 800, borderRadius: '50%',
-      background: 'radial-gradient(circle, rgba(139,92,246,0.12) 0%, transparent 60%)',
-      pointerEvents: 'none',
-    }} />
-    <div style={{
-      position: 'absolute', top: '20%', right: '-10%',
-      width: 400, height: 400, borderRadius: '50%',
-      background: 'radial-gradient(circle, rgba(99,102,241,0.08) 0%, transparent 60%)',
-      pointerEvents: 'none', animation: 'float 6s ease-in-out infinite',
-    }} />
+const heroImages = [
+  'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
+  'https://images.unsplash.com/photo-1540039155733-d6f1cba30c27?auto=format&fit=crop&w=800&q=80',
+];
 
-    <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-      <motion.div variants={stagger} initial="hidden" animate="visible">
-        <motion.div variants={fadeUp} custom={0} style={{ marginBottom: 'var(--space-6)' }}>
-          <span className="badge badge-accent" style={{ fontSize: 'var(--text-xs)', padding: '6px 16px' }}>
-            <Zap size={12} /> Now with real-time seat tracking
-          </span>
-        </motion.div>
+const Hero = () => {
+  const [currentImg, setCurrentImg] = useState(0);
 
-        <motion.h1 variants={fadeUp} custom={1} style={{
-          fontSize: 'var(--text-7xl)',
-          fontWeight: 800,
-          lineHeight: 'var(--leading-tight)',
-          letterSpacing: '-0.03em',
-          marginBottom: 'var(--space-6)',
-          maxWidth: 800,
-          margin: '0 auto var(--space-6)',
-        }}>
-          Book Your Next{' '}
-          <span className="gradient-text">Experience</span>
-        </motion.h1>
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImg((prev) => (prev + 1) % heroImages.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
 
-        <motion.p variants={fadeUp} custom={2} style={{
-          fontSize: 'var(--text-lg)',
-          color: 'var(--color-text-secondary)',
-          maxWidth: 560,
-          margin: '0 auto var(--space-8)',
-          lineHeight: 'var(--leading-relaxed)',
-        }}>
-          Discover events, reserve your seats in real-time, and secure your
-          spot — all in a seamless, premium booking experience.
-        </motion.p>
+  return (
+    <section style={{
+      position: 'relative',
+      overflow: 'hidden',
+      padding: 'var(--space-20) 0',
+    }}>
+      {/* Background orbs */}
+      <div style={{
+        position: 'absolute', top: '-10%', left: '-10%',
+        width: 600, height: 600, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 60%)',
+        pointerEvents: 'none',
+      }} />
 
-        <motion.div variants={fadeUp} custom={3} style={{
-          display: 'flex',
-          gap: 'var(--space-4)',
-          justifyContent: 'center',
-          flexWrap: 'wrap',
-        }}>
-          <Link to="/register">
-            <Button size="lg" icon={<ArrowRight size={16} />}>Get Started Free</Button>
-          </Link>
-          <Link to="/login">
-            <Button variant="secondary" size="lg">Sign In</Button>
-          </Link>
-        </motion.div>
-      </motion.div>
-    </div>
-  </section>
-);
+      <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 'var(--space-12)',
+          alignItems: 'center',
+        }} className="hero-grid">
+          
+          <motion.div variants={stagger} initial="hidden" animate="visible">
+            <motion.div variants={fadeUp} custom={0} style={{ marginBottom: 'var(--space-6)' }}>
+              <span className="badge badge-accent" style={{ fontSize: 'var(--text-xs)', padding: '6px 16px' }}>
+                <Zap size={12} /> Live Party Experiences
+              </span>
+            </motion.div>
+
+            <motion.h1 variants={fadeUp} custom={1} style={{
+              fontSize: 'clamp(var(--text-4xl), 5vw, var(--text-6xl))',
+              fontWeight: 800,
+              lineHeight: '1.1',
+              letterSpacing: '-0.03em',
+              marginBottom: 'var(--space-6)',
+            }}>
+              Book Your Next{' '}
+              <span className="gradient-text">Unforgettable Event</span>
+            </motion.h1>
+
+            <motion.p variants={fadeUp} custom={2} style={{
+              fontSize: 'var(--text-lg)',
+              color: 'var(--color-text-secondary)',
+              maxWidth: 500,
+              marginBottom: 'var(--space-8)',
+              lineHeight: 'var(--leading-relaxed)',
+            }}>
+              Discover premium parties, concerts, and exclusive events. Reserve your seats in real-time before they sell out.
+            </motion.p>
+
+            <motion.div variants={fadeUp} custom={3} style={{
+              display: 'flex',
+              gap: 'var(--space-4)',
+              flexWrap: 'wrap',
+            }}>
+              <Link to="/register">
+                <Button size="lg" icon={<ArrowRight size={16} />}>Find Events</Button>
+              </Link>
+              <Link to="/login">
+                <Button variant="secondary" size="lg">Sign In</Button>
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, rotate: -2 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            style={{ position: 'relative', height: 500, borderRadius: 'var(--radius-2xl)', overflow: 'hidden', boxShadow: 'var(--shadow-2xl)' }}
+            className="hero-image-container"
+          >
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={currentImg}
+                src={heroImages[currentImg]}
+                initial={{ opacity: 0, scale: 1.05 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
+                alt="Party Event"
+              />
+            </AnimatePresence>
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to top, rgba(9,9,11,0.8) 0%, transparent 40%)',
+              pointerEvents: 'none'
+            }} />
+          </motion.div>
+        </div>
+      </div>
+
+      <style>{`
+        @media (max-width: 900px) {
+          .hero-grid { grid-template-columns: 1fr !important; text-align: center; }
+          .hero-grid > div:first-child p { margin-left: auto; margin-right: auto; }
+          .hero-grid > div:first-child > div:last-child { justify-content: center; }
+          .hero-image-container { height: 350px !important; margin-top: var(--space-8); }
+        }
+      `}</style>
+    </section>
+  );
+};
 
 /* ── Features ──────────────────────────────────────────────── */
 const features = [
