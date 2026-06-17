@@ -1,56 +1,135 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { getAdminBookings } from '../../api/admin/adminBookingsApi';
 import Spinner from '../../components/common/Spinner';
 import ErrorBanner from '../../components/common/ErrorBanner';
+import Button from '../../components/common/Button';
 import { formatDate } from '../../utils/formatDate';
+import { ChevronLeft, ChevronRight, Ticket, User, CalendarDays } from 'lucide-react';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 10 },
+  visible: (i) => ({ opacity: 1, y: 0, transition: { delay: i * 0.04, duration: 0.3, ease: [0.16, 1, 0.3, 1] } }),
+};
 
 const AdminBookingsPage = () => {
   const [bookings, setBookings] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const limit = 10;
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const data = await getAdminBookings();
-        setBookings(data.bookings);
-      } catch (err) {
-        setError('Failed to load bookings');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBookings();
-  }, []);
+  const fetchBookings = async () => {
+    setLoading(true);
+    try {
+      const data = await getAdminBookings({ page, limit });
+      setBookings(data.bookings);
+      setTotal(data.total);
+    } catch (err) {
+      setError('Failed to load bookings');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  if (loading) return <Spinner />;
+  useEffect(() => { fetchBookings(); }, [page]);
+
+  const totalPages = Math.ceil(total / limit);
+
+  if (loading && bookings.length === 0) return <Spinner fullPage />;
   if (error) return <ErrorBanner message={error} />;
 
   return (
     <div>
-      <h1 style={{ marginBottom: '2rem' }}>All Bookings</h1>
-      
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {bookings.map((booking) => (
-          <div key={booking.reservationId} className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div style={{ marginBottom: 'var(--space-6)' }}>
+        <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 700, letterSpacing: 'var(--tracking-tight)', marginBottom: 'var(--space-1)' }}>
+          All Bookings
+        </h1>
+        <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)', margin: 0 }}>{total} confirmed bookings</p>
+      </div>
+
+      {/* Table */}
+      <div className="card" style={{ borderRadius: 'var(--radius-xl)', padding: 0, overflow: 'hidden' }}>
+        {/* Header */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '2fr 2fr 1.5fr 1fr',
+          gap: 'var(--space-4)',
+          padding: 'var(--space-4) var(--space-6)',
+          borderBottom: '1px solid var(--color-border)',
+          background: 'var(--color-surface-alt)',
+        }}>
+          {['User', 'Event', 'Booked On', 'Seats'].map((h) => (
+            <span key={h} style={{ fontSize: 'var(--text-xs)', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: 'var(--tracking-wide)' }}>
+              {h}
+            </span>
+          ))}
+        </div>
+
+        {/* Rows */}
+        {bookings.length > 0 ? bookings.map((booking, i) => (
+          <motion.div
+            key={booking.reservationId}
+            variants={fadeUp}
+            initial="hidden"
+            animate="visible"
+            custom={i}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '2fr 2fr 1.5fr 1fr',
+              gap: 'var(--space-4)',
+              padding: 'var(--space-4) var(--space-6)',
+              borderBottom: '1px solid var(--color-border)',
+              alignItems: 'center',
+              transition: 'background var(--duration-fast)',
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-surface-hover)'}
+            onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+          >
             <div>
-              <h3 style={{ margin: '0 0 0.5rem 0' }}>{booking.event?.name || 'Unknown Event'}</h3>
-              <p style={{ margin: '0 0 0.25rem 0', color: 'var(--color-text-muted)' }}>
-                <strong>User:</strong> {booking.user?.name} ({booking.user?.email})
-              </p>
-              <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>
-                <strong>Booked on:</strong> {formatDate(booking.bookedAt)}
-              </p>
+              <div style={{ fontWeight: 500, fontSize: 'var(--text-sm)' }}>{booking.user?.name || 'Unknown'}</div>
+              <div style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>{booking.user?.email}</div>
             </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem' }}>Seats</div>
-              <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--color-accent)' }}>
-                {booking.seatNumbers.join(', ')}
-              </div>
+            <div style={{ fontSize: 'var(--text-sm)', color: 'var(--color-text-secondary)' }}>
+              {booking.event?.name || 'Unknown Event'}
+            </div>
+            <div style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
+              {formatDate(booking.bookedAt)}
+            </div>
+            <div style={{ display: 'flex', gap: 'var(--space-1)', flexWrap: 'wrap' }}>
+              {booking.seatNumbers.map((sn) => (
+                <span key={sn} className="badge badge-accent">{sn}</span>
+              ))}
+            </div>
+          </motion.div>
+        )) : (
+          <div style={{ padding: 'var(--space-12)', textAlign: 'center' }}>
+            <Ticket size={32} color="var(--color-text-muted)" style={{ marginBottom: 'var(--space-2)' }} />
+            <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)' }}>No bookings found.</p>
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: 'var(--space-4) var(--space-6)',
+            borderTop: '1px solid var(--color-border)',
+          }}>
+            <span style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)' }}>
+              Page {page} of {totalPages}
+            </span>
+            <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
+              <Button variant="secondary" size="sm" onClick={() => setPage(p => p - 1)} disabled={page <= 1}>
+                <ChevronLeft size={14} />
+              </Button>
+              <Button variant="secondary" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= totalPages}>
+                <ChevronRight size={14} />
+              </Button>
             </div>
           </div>
-        ))}
-        {bookings.length === 0 && <p>No bookings found.</p>}
+        )}
       </div>
     </div>
   );
