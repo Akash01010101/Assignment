@@ -149,5 +149,16 @@ The platform relies on three distinct user roles: `user`, `organizer`, and `admi
 - No email confirmation notifications.
 - No frontend testing suite (e.g., React Testing Library or Cypress).
 - No refresh tokens; JWTs are static and expire after 24 hours.
-- No force cancellation mechanism for admins when dealing with events with active bookings.
 - No audit log of administrative actions.
+
+## UI/UX & Responsive Enhancements
+- **Fluid Typography**: The application implements a global scaling typography system. On desktop screens (`>1024px`), the root scale increases to provide larger, more prominent elements, while on mobile screens (`<768px`) it scales down proportionately.
+- **Responsive Seat Maps**: Seat grid elements are bound to CSS variables (`--seat-size: 36px` on desktop, `28px` on mobile). Mobile layout uses strict width bounds and flexible alignments to prevent scrolling issues that truncate horizontal containers.
+- **Strict Box Sizing**: A global CSS reset guarantees `box-sizing: border-box`, strictly containing 100% width padded elements within viewport bounds on mobile devices.
+
+## Backend Deployment Recommendations
+When deploying the Node.js backend to a production VPS (Virtual Private Server), the following configuration is recommended for handling concurrency and `npm install` spikes:
+- **Compute**: Minimum 2 vCPUs, 2GB+ RAM. 
+- **OS**: Ubuntu 24.04 LTS or 22.04 LTS.
+- **Critical Fix for 1GB RAM Machines**: If running on a free-tier 1GB RAM machine (such as Azure `B2ats_v2`), ensure you create a 2GB Swap File (`fallocate -l 2G /swapfile`) before running `npm install` to prevent Out-Of-Memory crashes.
+- **Stack**: Node LTS, PM2 (Process Manager, highly recommended in cluster mode), Nginx (Reverse Proxy for port 443), Certbot (SSL).

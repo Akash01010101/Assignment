@@ -23,6 +23,7 @@ const getAdminEvents = async (req, res) => {
         venue: event.venue,
         dateTime: event.dateTime,
         totalSeats: event.totalSeats,
+        imageUrl: event.imageUrl,
         availableSeats: available,
         reservedSeats: reserved,
         bookedSeats: booked,
@@ -36,8 +37,19 @@ const getAdminEvents = async (req, res) => {
 const createEvent = async (req, res) => {
   const { name, venue, dateTime, totalSeats, seatsPerRow = 10 } = req.body;
 
+  let imageUrl;
+  if (req.file) {
+    imageUrl = `/uploads/${req.file.filename}`;
+  } else {
+    const defaultImages = [
+      'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1170&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=1169&auto=format&fit=crop'
+    ];
+    imageUrl = defaultImages[Math.floor(Math.random() * defaultImages.length)];
+  }
+
   const event = await adminEventService.createEventWithSeats(
-    { name, venue, dateTime, totalSeats, organizer: req.user.id },
+    { name, venue, dateTime, totalSeats, imageUrl, organizer: req.user.id },
     seatsPerRow
   );
 
@@ -48,6 +60,7 @@ const createEvent = async (req, res) => {
       venue: event.venue,
       dateTime: event.dateTime,
       totalSeats: event.totalSeats,
+      imageUrl: event.imageUrl,
     },
   });
 };

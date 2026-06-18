@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { getAdminEventSeats, releaseSeat } from '../../api/admin/adminSeatsApi';
+import { deleteAdminEvent } from '../../api/admin/adminEventsApi';
 import Spinner from '../../components/common/Spinner';
 import ErrorBanner from '../../components/common/ErrorBanner';
 import Button from '../../components/common/Button';
@@ -10,6 +11,7 @@ import { ArrowLeft, Armchair, Unlock } from 'lucide-react';
 
 const AdminEventSeatsPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [seats, setSeats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -44,6 +46,16 @@ const AdminEventSeatsPage = () => {
     }
   };
 
+  const handleDeleteEvent = async () => {
+    if (!window.confirm("Delete this event? This cannot be undone.")) return;
+    try {
+      await deleteAdminEvent(id);
+      navigate('/admin/events');
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to delete event');
+    }
+  };
+
   // Group by row
   const rows = {};
   seats.forEach((seat) => {
@@ -65,16 +77,21 @@ const AdminEventSeatsPage = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', marginBottom: 'var(--space-6)' }}>
-        <Link to="/admin/events" style={{ color: 'var(--color-text-muted)', display: 'flex' }}>
-          <ArrowLeft size={20} />
-        </Link>
-        <div>
-          <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 700, letterSpacing: 'var(--tracking-tight)', margin: 0 }}>
-            Manage Seats
-          </h1>
-          <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)', margin: 0 }}>{seats.length} seats total</p>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 'var(--space-6)', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+          <Link to="/admin/events" style={{ color: 'var(--color-text-muted)', display: 'flex' }}>
+            <ArrowLeft size={20} />
+          </Link>
+          <div>
+            <h1 style={{ fontSize: 'var(--text-3xl)', fontWeight: 700, letterSpacing: 'var(--tracking-tight)', margin: 0 }}>
+              Manage Seats
+            </h1>
+            <p style={{ color: 'var(--color-text-muted)', fontSize: 'var(--text-sm)', margin: 0 }}>{seats.length} seats total</p>
+          </div>
         </div>
+        <Button variant="danger" size="sm" onClick={handleDeleteEvent}>
+          Delete Event
+        </Button>
       </div>
 
       {/* Stats bar */}
@@ -96,7 +113,8 @@ const AdminEventSeatsPage = () => {
           STAGE
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-2)' }}>
+        <div style={{ width: '100%', overflowX: 'auto', paddingBottom: 'var(--space-4)' }}>
+          <div className="seat-grid-inner" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', width: 'max-content' }}>
           {sortedRowLabels.map((rowLabel) => {
             const rowSeats = rows[rowLabel].sort((a, b) => {
               const numA = parseInt(a.seatNumber.replace(/\D/g, ''), 10);
@@ -105,11 +123,11 @@ const AdminEventSeatsPage = () => {
             });
 
             return (
-            <div key={rowLabel} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', justifyContent: 'center' }}>
-              <span style={{ width: 24, textAlign: 'center', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', fontWeight: 600 }}>
+            <div key={rowLabel} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', minWidth: 'min-content' }}>
+              <span style={{ width: 24, flexShrink: 0, textAlign: 'center', fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', fontWeight: 600 }}>
                 {rowLabel}
               </span>
-              <div style={{ display: 'flex', gap: 'var(--space-1)', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', gap: 'var(--space-1)', flexWrap: 'nowrap' }}>
                 {rowSeats.map((seat) => {
                   let bg, border, color;
                   if (seat.status === 'available') {
@@ -126,12 +144,12 @@ const AdminEventSeatsPage = () => {
                       whileHover={seat.status === 'reserved' ? { scale: 1.1 } : {}}
                       onClick={() => seat.status === 'reserved' && setReleaseTarget(seat)}
                       style={{
-                        width: 36, height: 36,
+                        width: 'var(--seat-size)', height: 'var(--seat-size)', flexShrink: 0,
                         background: bg, border, color,
                         borderRadius: 'var(--radius-sm)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         cursor: seat.status === 'reserved' ? 'pointer' : 'default',
-                        fontSize: 'var(--text-xs)', fontWeight: 600,
+                        fontSize: '10px', fontWeight: 600,
                         transition: 'all 0.15s',
                       }}
                       title={`${seat.seatNumber} — ${seat.status}${seat.status === 'reserved' ? ' (click to release)' : ''}`}
@@ -142,8 +160,9 @@ const AdminEventSeatsPage = () => {
                 })}
               </div>
             </div>
-          );
-        })}
+            );
+          })}
+          </div>
         </div>
 
         {/* Legend */}

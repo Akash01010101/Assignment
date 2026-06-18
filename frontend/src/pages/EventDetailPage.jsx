@@ -43,7 +43,8 @@ const SeatMap = ({ seats, selectedSeats, onToggleSeat }) => {
         STAGE
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 'var(--space-2)' }}>
+      <div style={{ width: '100%', overflowX: 'auto', paddingBottom: 'var(--space-4)' }}>
+        <div className="seat-grid-inner" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-2)', width: 'max-content' }}>
         {sortedRowLabels.map((rowLabel) => {
           const rowSeats = rows[rowLabel].sort((a, b) => {
             const numA = parseInt(a.seatNumber.replace(/\D/g, ''), 10);
@@ -52,14 +53,14 @@ const SeatMap = ({ seats, selectedSeats, onToggleSeat }) => {
           });
 
           return (
-            <div key={rowLabel} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', justifyContent: 'center' }}>
+            <div key={rowLabel} style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', minWidth: 'min-content' }}>
               <span style={{
-                width: 24, textAlign: 'center',
+                width: 24, flexShrink: 0, textAlign: 'center',
                 fontSize: 'var(--text-xs)', color: 'var(--color-text-muted)', fontWeight: 600,
               }}>
                 {rowLabel}
               </span>
-              <div style={{ display: 'flex', gap: 'var(--space-1)', flexWrap: 'wrap', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', gap: 'var(--space-1)', flexWrap: 'nowrap' }}>
             {rowSeats.map((seat) => {
               const isSelected = selectedSeats.includes(seat.seatNumber);
               const isAvailable = seat.status === 'available';
@@ -96,11 +97,11 @@ const SeatMap = ({ seats, selectedSeats, onToggleSeat }) => {
                   whileHover={isAvailable ? { scale: 1.15, y: -2 } : {}}
                   whileTap={isAvailable ? { scale: 0.95 } : {}}
                   style={{
-                    width: 36, height: 36,
+                    width: 'var(--seat-size)', height: 'var(--seat-size)', flexShrink: 0,
                     background: bg, border, color,
                     borderRadius: 'var(--radius-sm)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    cursor, fontSize: 'var(--text-xs)', fontWeight: 600,
+                    cursor, fontSize: '10px', fontWeight: 600,
                     userSelect: 'none',
                     boxShadow: shadow,
                     transition: 'background 0.15s, border-color 0.15s, box-shadow 0.15s',
@@ -114,7 +115,8 @@ const SeatMap = ({ seats, selectedSeats, onToggleSeat }) => {
           </div>
         </div>
       );
-    })}
+        })}
+        </div>
       </div>
     </div>
   );
@@ -222,13 +224,23 @@ const EventDetailPage = () => {
         overflow: 'hidden',
       }}>
         <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: 3,
-          background: 'var(--gradient-accent)',
-        }} />
-        <h1 style={{
-          fontSize: 'var(--text-3xl)', fontWeight: 700,
-          letterSpacing: 'var(--tracking-tight)', marginBottom: 'var(--space-4)',
+          position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0
         }}>
+          <img 
+            src={event.imageUrl?.startsWith('/') ? `http://localhost:5000${event.imageUrl}` : (event.imageUrl || 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1170&auto=format&fit=crop')}
+            alt={event.name}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.35) contrast(1.1)' }}
+          />
+        </div>
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: 3,
+          background: 'var(--gradient-accent)', zIndex: 1
+        }} />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <h1 style={{
+            fontSize: 'var(--text-3xl)', fontWeight: 700,
+            letterSpacing: 'var(--tracking-tight)', marginBottom: 'var(--space-4)',
+          }}>
           {event.name}
         </h1>
         <div style={{ display: 'flex', gap: 'var(--space-6)', flexWrap: 'wrap' }}>
@@ -238,8 +250,9 @@ const EventDetailPage = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)' }}>
             <CalendarDays size={16} /> {formatDate(event.dateTime)}
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)' }}>
-            <Armchair size={16} /> {event.totalSeats} total seats
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', color: 'var(--color-text-secondary)', fontSize: 'var(--text-sm)' }}>
+              <Armchair size={16} /> {event.totalSeats} total seats
+            </div>
           </div>
         </div>
       </div>

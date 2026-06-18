@@ -3,8 +3,11 @@ const cors = require('cors');
 const helmet = require('helmet');
 const env = require('./config/env');
 const errorHandler = require('./middleware/errorHandler');
+const path = require('path');
 
 const app = express();
+
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 app.use(helmet());
 app.use(cors({ origin: env.CORS_ORIGIN }));

@@ -22,7 +22,7 @@ const AdminEventsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Create form state
-  const [form, setForm] = useState({ name: '', venue: '', dateTime: '', totalSeats: '', seatsPerRow: '10' });
+  const [form, setForm] = useState({ name: '', venue: '', dateTime: '', totalSeats: '', seatsPerRow: '10', image: null });
   const [createLoading, setCreateLoading] = useState(false);
   const [createError, setCreateError] = useState(null);
 
@@ -61,9 +61,10 @@ const AdminEventsPage = () => {
         dateTime: new Date(form.dateTime).toISOString(),
         totalSeats: parseInt(form.totalSeats),
         seatsPerRow: parseInt(form.seatsPerRow),
+        image: form.image,
       });
       setShowCreateModal(false);
-      setForm({ name: '', venue: '', dateTime: '', totalSeats: '', seatsPerRow: '10' });
+      setForm({ name: '', venue: '', dateTime: '', totalSeats: '', seatsPerRow: '10', image: null });
       fetchEvents();
     } catch (err) {
       setCreateError(err.response?.data?.error || 'Failed to create event');
@@ -115,11 +116,17 @@ const AdminEventsPage = () => {
               gap: 'var(--space-4)', flexWrap: 'wrap',
             }}
           >
-            <div style={{ flex: 1, minWidth: 200 }}>
-              <h3 style={{ fontSize: 'var(--text-base)', fontWeight: 600, marginBottom: 'var(--space-2)' }}>
-                {event.name}
-              </h3>
-              <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', marginBottom: 'var(--space-2)' }}>
+            <div style={{ flex: 1, minWidth: 200, display: 'flex', gap: 'var(--space-4)', alignItems: 'center' }}>
+              <img 
+                src={event.imageUrl?.startsWith('/') ? `http://localhost:5000${event.imageUrl}` : (event.imageUrl || 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1170&auto=format&fit=crop')} 
+                alt={event.name} 
+                style={{ width: 64, height: 64, borderRadius: 'var(--radius-md)', objectFit: 'cover' }} 
+              />
+              <div>
+                <h3 style={{ fontSize: 'var(--text-base)', fontWeight: 600, marginBottom: 'var(--space-2)' }}>
+                  {event.name}
+                </h3>
+                <div style={{ display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap', marginBottom: 'var(--space-2)' }}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)' }}>
                   <MapPin size={12} /> {event.venue}
                 </span>
@@ -131,6 +138,7 @@ const AdminEventsPage = () => {
                 <span className="badge badge-success">{event.availableSeats} available</span>
                 <span className="badge badge-warning">{event.reservedSeats} reserved</span>
                 <span className="badge badge-error">{event.bookedSeats} booked</span>
+              </div>
               </div>
             </div>
             <div style={{ display: 'flex', gap: 'var(--space-2)' }}>
@@ -182,6 +190,16 @@ const AdminEventsPage = () => {
               <label>Seats per Row</label>
               <input type="number" className="input-field" placeholder="10" min="1" max="20" value={form.seatsPerRow} onChange={(e) => setForm({ ...form, seatsPerRow: e.target.value })} />
             </div>
+          </div>
+          <div className="input-group">
+            <label>Event Image (Optional)</label>
+            <input 
+              type="file" 
+              accept="image/*"
+              className="input-field" 
+              onChange={(e) => setForm({ ...form, image: e.target.files[0] })} 
+              style={{ paddingTop: 10 }}
+            />
           </div>
           <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'flex-end', marginTop: 'var(--space-2)' }}>
             <Button type="button" variant="ghost" onClick={() => setShowCreateModal(false)}>Cancel</Button>

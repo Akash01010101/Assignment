@@ -34,8 +34,8 @@ function App() {
           <Routes>
             {/* Public */}
             <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<PageContainer><LoginPage /></PageContainer>} />
-            <Route path="/register" element={<PageContainer><RegisterPage /></PageContainer>} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/business-account" element={<PageContainer><BusinessAccountPage /></PageContainer>} />
 
             {/* Protected */}

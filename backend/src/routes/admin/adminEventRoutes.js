@@ -7,6 +7,7 @@ const adminEventController = require('../../controllers/admin/adminEventControll
 const adminSeatController = require('../../controllers/admin/adminSeatController');
 const authMiddleware = require('../../middleware/authMiddleware');
 const requireOrganizerOrAdmin = require('../../middleware/requireOrganizerOrAdmin');
+const upload = require('../../middleware/upload');
 
 router.use(authMiddleware, requireOrganizerOrAdmin);
 
@@ -21,6 +22,7 @@ router.get(
 
 router.post(
   '/',
+  upload.single('image'),
   [
     body('name').notEmpty().withMessage('Name is required'),
     body('venue').notEmpty().withMessage('Venue is required'),

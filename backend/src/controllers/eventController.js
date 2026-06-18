@@ -15,6 +15,7 @@ const getEvents = async (req, res) => {
         venue: event.venue,
         dateTime: event.dateTime,
         totalSeats: event.totalSeats,
+        imageUrl: event.imageUrl,
         availableSeats,
       };
     })
@@ -38,6 +39,7 @@ const getEventById = async (req, res) => {
       venue: event.venue,
       dateTime: event.dateTime,
       totalSeats: event.totalSeats,
+      imageUrl: event.imageUrl,
     },
     seats,
   });

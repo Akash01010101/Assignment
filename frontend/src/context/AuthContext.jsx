@@ -37,6 +37,7 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('eventBooking_auth');
+    window.location.href = '/';
   };
 
   if (loading) return null;

@@ -76,21 +76,24 @@ const EventsPage = () => {
                 custom={i}
               >
                 <Link to={`/events/${event.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-                  <div className="card-elevated" style={{ cursor: 'pointer' }}>
-                    {/* Accent stripe */}
-                    <div style={{
-                      height: 3,
-                      background: 'var(--gradient-accent)',
-                      borderRadius: 'var(--radius-full)',
-                      marginBottom: 'var(--space-4)',
-                    }} />
-
-                    <h3 style={{
-                      fontSize: 'var(--text-lg)',
-                      fontWeight: 600,
-                      marginBottom: 'var(--space-3)',
-                      letterSpacing: 'var(--tracking-tight)',
-                    }}>
+                  <div className="card-elevated" style={{ cursor: 'pointer', padding: 0, overflow: 'hidden' }}>
+                    <div style={{ height: 160, width: '100%', position: 'relative' }}>
+                      <img 
+                        src={event.imageUrl?.startsWith('/') ? `http://localhost:5000${event.imageUrl}` : (event.imageUrl || 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1170&auto=format&fit=crop')}
+                        alt={event.name}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8), transparent)' }} />
+                      <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', height: 3, background: 'var(--gradient-accent)' }} />
+                    </div>
+                    
+                    <div style={{ padding: 'var(--space-6)' }}>
+                      <h3 style={{
+                        fontSize: 'var(--text-lg)',
+                        fontWeight: 600,
+                        marginBottom: 'var(--space-3)',
+                        letterSpacing: 'var(--tracking-tight)',
+                      }}>
                       {event.name}
                     </h3>
 
@@ -142,7 +145,8 @@ const EventsPage = () => {
                       <ArrowRight size={16} />
                     </div>
                   </div>
-                </Link>
+                </div>
+              </Link>
               </motion.div>
             );
           })}

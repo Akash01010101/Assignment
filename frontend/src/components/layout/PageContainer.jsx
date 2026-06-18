@@ -16,8 +16,11 @@ const PageContainer = ({ children, noPadding = false }) => {
       animate="animate"
       exit="exit"
       style={{
-        padding: noPadding ? 0 : 'var(--space-8) var(--space-6)',
-        minHeight: 'calc(100vh - var(--header-height))',
+        paddingTop: noPadding ? 0 : 'calc(var(--header-height) + var(--space-12))',
+        paddingRight: noPadding ? 0 : 'var(--space-6)',
+        paddingBottom: noPadding ? 0 : 'var(--space-8)',
+        paddingLeft: noPadding ? 0 : 'var(--space-6)',
+        minHeight: '100vh',
       }}
     >
       {children}
