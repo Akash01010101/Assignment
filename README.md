@@ -13,7 +13,7 @@ This is a production-grade, full-stack seat reservation and booking system. It i
 
 ## Prerequisites
 - Node.js 20+
-- Docker and Docker Compose (for MongoDB replica set)
+- Docker and Docker Compose (for MongoDB replica set) (optional you can also use atlas mongodb url)
 - npm
 
 ## Setup & Run — Backend
@@ -30,7 +30,7 @@ This is a production-grade, full-stack seat reservation and booking system. It i
    ```
    *Make sure to fill in `JWT_SECRET`, `ADMIN_SEED_EMAIL`, and `ADMIN_SEED_PASSWORD` in your `.env` file.*
 
-3. Start MongoDB Replica Set:
+3. Start MongoDB Replica Set (optional if using atlas cloud mongodb database change the MONGODB_URI in backend/.env):
    ```bash
    docker compose up -d
    ```
