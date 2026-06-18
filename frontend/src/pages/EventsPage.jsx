@@ -40,7 +40,12 @@ const EventsPage = () => {
       </div>
 
       {isLoading ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 'var(--space-4)' }}>
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))', 
+          gap: 'var(--space-4)',
+          justifyContent: 'center'
+        }}>
           <SkeletonLoader variant="card" count={3} />
         </div>
       ) : events.length === 0 ? (
@@ -59,8 +64,9 @@ const EventsPage = () => {
       ) : (
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 340px), 1fr))',
           gap: 'var(--space-4)',
+          justifyContent: 'center',
         }}>
           {events.map((event, i) => {
             const utilization = event.totalSeats > 0
