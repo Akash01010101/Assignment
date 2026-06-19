@@ -118,7 +118,7 @@ const AdminEventsPage = () => {
           >
             <div style={{ flex: 1, minWidth: 200, display: 'flex', gap: 'var(--space-4)', alignItems: 'center' }}>
               <img 
-                src={event.imageUrl?.startsWith('/') ? `http://localhost:5000${event.imageUrl}` : (event.imageUrl || 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1170&auto=format&fit=crop')} 
+                src={event.imageUrl?.startsWith('/') ? `${import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:5000'}${event.imageUrl}` : (event.imageUrl || 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?q=80&w=1170&auto=format&fit=crop')} 
                 alt={event.name} 
                 style={{ width: 64, height: 64, borderRadius: 'var(--radius-md)', objectFit: 'cover' }} 
               />
