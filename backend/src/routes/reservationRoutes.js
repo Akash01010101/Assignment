@@ -6,6 +6,12 @@ const asyncHandler = require('../middleware/asyncHandler');
 const authMiddleware = require('../middleware/authMiddleware');
 const reservationController = require('../controllers/reservationController');
 
+router.get(
+  '/me',
+  authMiddleware,
+  asyncHandler(reservationController.getMyReservations)
+);
+
 router.post(
   '/',
   authMiddleware,

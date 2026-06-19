@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { getMyBookings } from '../api/bookingsApi';
 
 export const useMyBookings = () => {
@@ -6,20 +6,22 @@ export const useMyBookings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchBookings = async () => {
-      try {
-        const response = await getMyBookings();
-        setData(response.bookings);
-      } catch (err) {
-        setError(err.response?.data?.error || 'Failed to fetch bookings');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchBookings();
+  const fetchBookings = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await getMyBookings();
+      setData(response.bookings);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to fetch bookings');
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
 
-  return { data, isLoading, error };
+  useEffect(() => {
+    fetchBookings();
+  }, [fetchBookings]);
+
+  return { data, isLoading, error, refetch: fetchBookings };
 };
